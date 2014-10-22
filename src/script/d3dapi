@@ -1,0 +1,28 @@
+#!/bin/sh
+# This file is part of the Doodle3D project (http://doodle3d.com).
+#
+# Copyright (c) 2013, Doodle3D
+# This software is licensed under the terms of the GNU GPL v2 or later.
+# See file LICENSE.txt or visit http://www.gnu.org/licenses/gpl.html for full license details.
+
+# NOTE: redirection to $LOG_FILE is not required anymore, it is configurable now.
+# It is left in just as a precaution for a badly configured firmware invocation.
+
+LUA=lua
+SCRIPT_PATH=/usr/share/lua/wifibox
+LOG_FILE=/tmp/wifibox.log
+
+cd $SCRIPT_PATH
+echo "CGI invocation" >> $LOG_FILE
+#strace -o /tmp/trace-$$.log -ff $LUA ./cmdmain.lua $@ 2>> $LOG_FILE
+$LUA ./cmdmain.lua $@ 2>> $LOG_FILE
+
+exit $?
+
+# Code below is for debugging incoming CGI data
+read -n $CONTENT_LENGTH POSTDATA
+echo -e "Content-type: text/plain\r\n\r\n"
+set
+echo "---"
+echo $POSTDATA
+echo "---"
